@@ -3,8 +3,9 @@ const app = express();
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-    res.status(200).json('OK');
-});
+const router = require('./router/router')(app);
 
-app.listen(3000);
+app.listen(3000, () => {
+    console.clear();
+    console.log('Servidor rodando e funcional.');
+});
