@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx run nodemon src/index.js",
+    "dev": "npx nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node src/index.js"
   },
@@ -20,6 +20,7 @@
   "homepage": "https://github.com/leandrofaria/SistemaHospitalar#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.12.1"
+    "mongoose": "^5.12.1",
+    "nodemon": "^2.0.7"
   }
 }
