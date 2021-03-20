@@ -1,18 +1,14 @@
-const mongoose = require('mongoose');
+class Consulta {
+    id;
+    idProfissional;
+    idEspecialidade
+    data;
 
-const { model, Schema } = mongoose;
+    constructor() { }
 
-const consultaSchema = new Schema(
-  {
-    // here goes the attributes
-    id: { type: String, required: true },
-  },
-  {
-    // name of consulta's collection
-    collection: 'consulta',
-  }
-);
-
-const Consulta = model('Consulta', consultaSchema);
+    persist() {
+        // Função para salvar o objeto no Banco de Dados
+    }
+}
 
 module.exports = Consulta;
