@@ -5,6 +5,7 @@ module.exports = function(app) {
     });
 
     app.use('/usuario', require('./collections/usuario'));
+    app.use('/auth', require('./collections/autenticacao'));
     
     // Catch all
     app.use('*', function (req, res, next){
