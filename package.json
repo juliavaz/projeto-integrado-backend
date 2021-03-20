@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/leandrofaria/SistemaHospitalar/issues"
   },
-  "homepage": "https://github.com/leandrofaria/SistemaHospitalar#readme"
+  "homepage": "https://github.com/leandrofaria/SistemaHospitalar#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
