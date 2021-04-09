@@ -20,13 +20,13 @@
   "homepage": "https://github.com/leandrofaria/SistemaHospitalar#readme",
   "dependencies": {
     "express": "^4.17.1",
-    "mongoose": "^5.12.1",
-    "nodemon": "^2.0.7"
+    "mongoose": "^5.12.1"
   },
   "devDependencies": {
     "eslint": "^7.22.0",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-plugin-import": "^2.22.1",
-    "eslint-plugin-prettier": "^3.3.1"
+    "eslint-plugin-prettier": "^3.3.1",
+    "nodemon": "^2.0.7"
   }
 }
