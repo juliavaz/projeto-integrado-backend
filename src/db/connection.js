@@ -1,13 +1,10 @@
-const mongoose = require('mongoose');
+import { connect } from 'mongoose';
 
-const tableName = '';
-
-const url = `mongodb://localhost:27017/${tableName}`;
-
-const connection = mongoose.connect(url, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  useFindAndModify: false,
-});
-
-module.exports = connection;
+export default connect(
+  `mongodb://localhost:27017/${process.env.DATABASE_NAME}`,
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  },
+).then(() => console.log('Conectado no banco de dados.'));
