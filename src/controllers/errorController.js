@@ -36,6 +36,13 @@ module.exports = (err, req, res, next) => {
     });
   }
 
+  if (err.codeName === 'DuplicateKey') {
+    return res.status(400).json({
+      status: 'fail',
+      message: `Chave duplicada. ${JSON.stringify(err.keyValue)}`,
+    });
+  }
+
   return res.status(err.statusCode).json({
     status: err.status,
     message: err.message,
