@@ -50,7 +50,17 @@ exports.retrieveOne = async (req, res, next) => {
   }
 };
 
-exports.update = async (req, res, next) => {};
+exports.update = async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+
+  return res.status(200).json({
+    status: 'success',
+    user: user,
+  });
+};
 
 exports.delete = async (req, res, next) => {
   const user = await User.findByIdAndUpdate(req.params.id, { deleted: true });
