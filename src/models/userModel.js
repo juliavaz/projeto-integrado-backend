@@ -30,10 +30,12 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'moderator', 'admin'],
       default: 'user',
     },
-    profile: {
-      name: {
-        type: String,
-      },
+    activationToken: {
+      type: String,
+    },
+    activated: {
+      type: Boolean,
+      default: false,
     },
     deleted: {
       type: Boolean,
@@ -69,6 +71,16 @@ userSchema.methods.checkPassword = async function (passwordInput, userPassword) 
 userSchema.methods.passwordChangedAfter = function (timestamp) {
   // Returns true if password has been changed after the provided timestamp
   return parseInt(new Date(this.passwordUpdatedAt).getTime() / 1000) > timestamp;
+};
+
+userSchema.methods.createActivationToken = async function () {
+  const token = crypto.randomBytes(32).toString('hex');
+
+  this.activationToken = crypto.createHash('sha256').update(token).digest('hex');
+
+  this.save({ validateBeforeSave: false });
+
+  return token;
 };
 
 userSchema.methods.createPasswordResetToken = async function () {

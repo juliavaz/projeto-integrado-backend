@@ -54,11 +54,76 @@ exports.signup = async (req, res, next) => {
       password: password,
     });
 
+    const activationToken = await newUser.createActivationToken();
+
+    emailSender.send({
+      email: newUser.email,
+      subject: 'Account Activation',
+      html: `
+        <p>Welcome and thank you for registering. Please activate your account by following the link below (or copy and paste it in your browser):</p>
+        <p>${process.env.FRONTEND_URL}/auth/activate/${activationToken}</p>
+        <p><br>Make sure to check your spam and trash inboxes as well, in case the email was incorrectly put there.</p>`,
+    });
+
     return res.status(201).json({
       status: 'success',
-      data: {
-        id: newUser.id,
-      },
+      message: 'Accounted created. Please activate it now by checking the instructions sent to your email address.',
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+exports.resendActivationToken = async (req, res, next) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+
+    if (user && user.activated === false) {
+      const activationToken = await user.createActivationToken();
+
+      emailSender.send({
+        email: user.email,
+        subject: 'Account Activation',
+        html: `
+        <p>Welcome and thank you for registering. Please activate your account by following the link below (or copy and paste it in your browser):</p>
+        <p>${process.env.FRONTEND_URL}/auth/activate/${activationToken}</p>
+        <p><br>Make sure to check your spam and trash inboxes as well, in case the email was incorrectly put there.</p>`,
+      });
+
+      return res.status(200).json({
+        status: 'success',
+        message: `Activation instructions sent to your email.`,
+      });
+    }
+
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Email not registered or account already activated.',
+    });
+  } catch (err) {
+    return next(err);
+  }
+};
+
+exports.activate = async (req, res, next) => {
+  try {
+    const encryptedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
+
+    const user = await User.findOne({ activationToken: encryptedToken });
+
+    if (user) {
+      user.activated = true;
+      user.save({ runValidators: false });
+
+      return res.status(200).json({
+        status: 'success',
+        message: 'Accounted activated.',
+      });
+    }
+
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Invalid data.',
     });
   } catch (err) {
     return next(err);
@@ -73,6 +138,13 @@ exports.login = async (req, res, next) => {
     }).select('+password');
 
     if (user && (await user.checkPassword(password, user.password))) {
+      if (user.activated !== true) {
+        return res.status(200).json({
+          status: 'fail',
+          message: 'Account has not been activated yet.',
+        });
+      }
+
       const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIREIN,
       });
