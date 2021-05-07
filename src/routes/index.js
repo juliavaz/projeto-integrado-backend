@@ -1,7 +1,6 @@
 const { Router } = require('express');
 const usersRoutes = require('./usersRoutes');
 const authRoutes = require('./authRoutes');
-const errorController = require('../controllers/errorController');
 const authController = require('../controllers/authController');
 const CustomError = require('../utils/customError');
 
@@ -38,8 +37,5 @@ router.get('/restricted', authController.requireLogin, authController.requireRol
 router.all('*', (req, res, next) => {
   return next(new CustomError('Not found', 'fail', 404));
 });
-
-// Error Controller
-router.use(errorController);
 
 module.exports = router;

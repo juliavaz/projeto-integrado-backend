@@ -4,6 +4,7 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const errorController = require('./controllers/errorController');
 const routes = require('./routes');
 
 const app = express();
@@ -30,5 +31,8 @@ app.use(hpp());
 
 // API routes
 app.use(routes);
+
+// Error Controller
+app.use(errorController);
 
 module.exports = app;
