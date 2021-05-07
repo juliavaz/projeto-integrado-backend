@@ -30,6 +30,11 @@ const userSchema = new mongoose.Schema(
       enum: ['user', 'moderator', 'admin'],
       default: 'user',
     },
+    profile: {
+      name: {
+        type: String,
+      },
+    },
     deleted: {
       type: Boolean,
     },
