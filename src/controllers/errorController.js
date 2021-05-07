@@ -50,6 +50,13 @@ module.exports = (err, req, res, next) => {
     });
   }
 
+  if (err.name === 'SyntaxError') {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Invalid data.',
+    });
+  }
+
   return res.status(err.statusCode).json({
     status: err.status,
     message: err.message,
