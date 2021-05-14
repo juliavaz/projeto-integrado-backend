@@ -1,4 +1,4 @@
-const crypo = require('crypto');
+const crypto = require('crypto');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
@@ -19,11 +19,10 @@ const pacienteSchema = new mongoose.Schema({
     },
     cpf: {
         type: String,
-        required: [true, 'CPF is required field.'],
+        required: [true, 'CPF is a required field.'],
         unique: true,
         trim: true,
-        minlength: [11, 'CPF must have at least 11 characters.'],
-        maxlength: [11, 'CPF must be 11 characters.'],
+        length: [11, 'CPF must be 11 characters long.'],
         validate: {
             validator: function (v) {
               const cpfRegex = /^\d{3}.?\d{3}.?\d{3}-?\d{2}$|[0-9]{11}/;
@@ -34,9 +33,7 @@ const pacienteSchema = new mongoose.Schema({
     }, 
     dataNascimento: {
         type: Date,
-        required: [true, 'Data de Nascimento is a required.'],
-        unique: true, 
-        trim: true,
+        required: [true, 'Data de Nascimento is a required field.'],
 
     }},
     {

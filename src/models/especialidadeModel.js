@@ -5,8 +5,8 @@ const bcrypt = require('bcrypt');
 const especialidadeSchema = new mongoose.Schema({
   especialidade: {
     type: String,
-    enum: ['Escolha uma especialidade','PEDIATRIA', 'RADIOLOGIA', 'OFTALMOLOGIA', 'ONCOLOGIA', 'DERMATOLOGIA', 'GASTROENTEROLOGIA', 'EPIDEMIOLOGIA'],
-    default: 'Escolha uma especialidade',
+    enum: ['CLÍNICA GERAL', 'PEDIATRIA', 'RADIOLOGIA', 'OFTALMOLOGIA', 'ONCOLOGIA', 'DERMATOLOGIA', 'GASTROENTEROLOGIA', 'EPIDEMIOLOGIA'],
+    default: 'CLÍNICA GERAL',
   },
 },
 {
@@ -16,9 +16,6 @@ const especialidadeSchema = new mongoose.Schema({
 });
 
 // Virtual Properties
-especialidadeSchema.virtual('daysSinceRegistration').get(function () {
-  return Math.floor((Date.now() - this.createdAt) / (1000 * 60 * 60 * 24));
-});
 
 const Especialidade = mongoose.model('Especialidade', especialidadeSchema);
 

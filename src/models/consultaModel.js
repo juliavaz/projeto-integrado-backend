@@ -12,9 +12,6 @@ const consultaSchema = new mongoose.Schema({
 });
 
 // Virtual Properties
-consultaSchema.virtual('daysSinceRegistration').get(function () {
-  return Math.floor((Date.now() - this.createdAt) / (1000 * 60 * 60 * 24));
-});
 
 const Consulta = mongoose.model('Consulta', consultaSchema);
 
