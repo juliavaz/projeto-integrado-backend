@@ -1,76 +1,9 @@
 const User = require('../models/userModel');
+const factory = require('../utils/factory');
 
-exports.create = async (req, res, next) => {
-  try {
-    const { email } = req.body;
-    const user = await User.findOne({ email: email });
-
-    if (user) return next(new CustomError('Email already registered.', 'fail', 400));
-
-    const newUser = await User.create(req.body);
-
-    return res.status(201).json({
-      status: 'success',
-      data: {
-        id: newUser.id,
-      },
-    });
-  } catch (err) {
-    return next(err);
-  }
-};
-
-exports.retrieve = async (req, res, next) => {
-  try {
-    const users = await User.find({});
-
-    return res.status(200).json({
-      status: 'success',
-      data: {
-        users: users,
-      },
-    });
-  } catch (err) {
-    return next(err);
-  }
-};
-
-exports.retrieveOne = async (req, res, next) => {
-  try {
-    const user = await User.findById(req.params.id);
-
-    return res.status(200).json({
-      status: 'success',
-      data: {
-        user: user,
-      },
-    });
-  } catch (err) {
-    return next(err);
-  }
-};
-
-exports.update = async (req, res, next) => {
-  try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-
-    return res.status(200).json({
-      status: 'success',
-      user: user,
-    });
-  } catch (err) {
-    return next(err);
-  }
-};
-
-exports.delete = async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, { deleted: true });
-
-  return res.status(204).json({
-    status: 'success',
-    data: null,
-  });
-};
+exports.create = factory.create(User);
+exports.retrieve = factory.retrieve(User);
+exports.retrieveOne = factory.retrieveOne(User);
+// DO NOT USE UPDATE USER TO CHANGE THE USER PASSWORD
+exports.update = factory.update(User);
+exports.delete = factory.delete(User);

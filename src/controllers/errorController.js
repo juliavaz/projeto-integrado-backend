@@ -36,7 +36,7 @@ module.exports = (err, req, res, next) => {
     });
   }
 
-  if (err.codeName === 'DuplicateKey') {
+  if (err.code === 11000) {
     return res.status(400).json({
       status: 'fail',
       message: `Duplicate field. ${JSON.stringify(err.keyValue)}`,

@@ -5,10 +5,12 @@ const authController = require('../controllers/authController');
 const router = new Router();
 
 // User routes
-router.post('/', authController.requireLogin, authController.requireRoles('admin'), usersController.create);
-router.get('/', authController.requireLogin, authController.requireRoles('admin'), usersController.retrieve);
-router.get('/:id', authController.requireLogin, authController.requireRoles('admin'), usersController.retrieveOne);
-router.patch('/:id', authController.requireLogin, authController.requireRoles('admin'), usersController.update);
-router.delete('/:id', authController.requireLogin, authController.requireRoles('admin'), usersController.delete);
+router.use(authController.requireLogin, authController.requireRoles('admin'));
+
+router.post('/', usersController.create);
+router.get('/', usersController.retrieve);
+router.get('/:id', usersController.retrieveOne);
+router.patch('/:id', usersController.update);
+router.delete('/:id', usersController.delete);
 
 module.exports = router;

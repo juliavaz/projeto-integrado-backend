@@ -6,7 +6,7 @@ const router = new Router();
 // Auth routes
 router.post('/signup', authController.signup);
 router.patch('/activate/:token', authController.activate);
-router.post('/resend-activation', authController.resendActivationToken);
+router.post('/resend-token', authController.resendActivationToken);
 router.post('/login', authController.login);
 router.post('/forgot-password', authController.forgotPassword);
 router.patch('/reset-password/:token', authController.resetPassword);
