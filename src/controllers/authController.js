@@ -3,7 +3,8 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const CustomError = require('../utils/customError');
 const User = require('../models/userModel');
-const emailSender = require('../utils/emailSender');
+const emailHandler = require('../utils/emailHandler');
+const EmailHandler = require('../utils/emailHandler');
 
 // TODO: send jwt token via cookie
 
@@ -54,16 +55,9 @@ exports.signup = async (req, res, next) => {
       password: password,
     });
 
-    const activationToken = await newUser.createActivationToken();
+    newUser.activationToken = await newUser.createActivationToken();
 
-    emailSender.send({
-      email: newUser.email,
-      subject: 'Account Activation',
-      html: `
-        <p>Welcome and thank you for registering. Please activate your account by following the link below (or copy and paste it in your browser):</p>
-        <p>${process.env.FRONTEND_URL}/auth/activate/${activationToken}</p>
-        <p><br>Make sure to check your spam and trash inboxes as well, in case the email was incorrectly put there.</p>`,
-    });
+    const sentEmail = await new EmailHandler(newUser).sendActivationEmail();
 
     return res.status(201).json({
       status: 'success',
@@ -79,20 +73,13 @@ exports.resendActivationToken = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (user && user.activated === false) {
-      const activationToken = await user.createActivationToken();
+      user.activationToken = await user.createActivationToken();
 
-      emailSender.send({
-        email: user.email,
-        subject: 'Account Activation',
-        html: `
-        <p>Welcome and thank you for registering. Please activate your account by following the link below (or copy and paste it in your browser):</p>
-        <p>${process.env.FRONTEND_URL}/auth/activate/${activationToken}</p>
-        <p><br>Make sure to check your spam and trash inboxes as well, in case the email was incorrectly put there.</p>`,
-      });
+      const sentEmail = await new EmailHandler(user).sendActivationEmail();
 
       return res.status(200).json({
         status: 'success',
-        message: `Activation instructions sent to your email.`,
+        message: `Activation instructions resent to your email.`,
       });
     }
 
@@ -169,16 +156,9 @@ exports.forgotPassword = async (req, res, next) => {
     const user = await User.findOne({ email: req.body.email });
 
     if (user) {
-      const resetToken = await user.createPasswordResetToken();
+      user.resetToken = await user.createPasswordResetToken();
 
-      emailSender.send({
-        email: user.email,
-        subject: 'Password Recovery',
-        html: `
-        <p>To create a new password for your account, please follow the link below or copy and paste it in your browser:</p>
-        <p>${process.env.FRONTEND_URL}/users/reset-password/${resetToken}</p>
-        <p><br>The link will be valid for 24 hours only.</p>`,
-      });
+      const sentEmail = await new EmailHandler(user).sendPasswordRecoveryEmail();
     }
 
     res.status(200).json({
