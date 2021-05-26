@@ -110,6 +110,11 @@ userSchema.pre(/^find/, function (next) {
   next();
 });
 
+// Static Methods
+userSchema.statics.getModelName = (type = 'singular') => {
+  return type === 'plural' ? 'users' : 'user';
+};
+
 const User = mongoose.model('User', userSchema);
 
 module.exports = User;

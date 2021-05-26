@@ -4,10 +4,14 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
+const compression = require('compression');
 const errorController = require('./controllers/errorController');
 const routes = require('./routes');
 
 const app = express();
+
+// Compress responses
+app.use(compression());
 
 // Security headers
 app.use(helmet());
