@@ -18,7 +18,9 @@ app.use(compression());
 app.use(helmet());
 
 // Enable CORS
+// TODO: define specific origin
 app.use(cors());
+app.options('*', cors());
 
 // Rate limiting
 const limiter = rateLimit({
