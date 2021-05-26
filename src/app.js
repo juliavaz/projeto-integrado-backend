@@ -5,6 +5,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const compression = require('compression');
+const cors = require('cors');
 const errorController = require('./controllers/errorController');
 const routes = require('./routes');
 
@@ -15,6 +16,9 @@ app.use(compression());
 
 // Security headers
 app.use(helmet());
+
+// Enable CORS
+app.use(cors());
 
 // Rate limiting
 const limiter = rateLimit({
