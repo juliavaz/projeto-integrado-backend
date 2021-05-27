@@ -35,7 +35,7 @@ class EmailHandler {
 
   async sendActivationEmail() {
     const renderedHtml = pug.renderFile(`${__dirname}/../views/emails/accountActivation.pug`, {
-      link: `${process.env.FRONTEND_URL}/auth/activate/${this.user.activationToken}`,
+      link: `${process.env.FRONTEND_URL}/auth/activate/${this.user.token}`,
     });
     await this.send('Activate your account', renderedHtml);
   }

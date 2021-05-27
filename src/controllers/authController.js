@@ -55,7 +55,7 @@ exports.signup = async (req, res, next) => {
       password: password,
     });
 
-    newUser.activationToken = await newUser.createActivationToken();
+    newUser.token = await newUser.createActivationToken();
 
     const sentEmail = await new EmailHandler(newUser).sendActivationEmail();
 
