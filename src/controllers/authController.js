@@ -6,7 +6,7 @@ const User = require('../models/userModel');
 const emailHandler = require('../utils/emailHandler');
 const EmailHandler = require('../utils/emailHandler');
 
-// TODO: send jwt token via cookie
+// TODO: send jwt token via cookie for improved security.
 
 exports.requireLogin = async (req, res, next) => {
   try {

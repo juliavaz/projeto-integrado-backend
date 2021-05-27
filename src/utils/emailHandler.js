@@ -25,9 +25,11 @@ class EmailHandler {
       this.email.subject = subject;
       this.email.html = html;
 
-      // TODO: uncomment the following line to actually send the email!!
-      //const sentEmail = await this.transporter.sendMail(this.email);
-      console.log(this.email);
+      if (process.env.NODE_ENV === 'production') {
+        const sentEmail = await this.transporter.sendMail(this.email);
+      } else {
+        console.log(this.email);
+      }
     } catch (err) {
       return next(err);
     }
