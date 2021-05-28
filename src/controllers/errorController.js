@@ -13,7 +13,7 @@ const handleValidationError = (err) => {
 
 module.exports = (err, req, res, next) => {
   // TODO: stop logging to console
-  console.log(err);
+  //console.log(err);
 
   let error;
 
