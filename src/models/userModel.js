@@ -20,8 +20,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['usuario', 'atendente', 'admin'],
-      default: 'usuario',
+      enum: ['paciente', 'atendente', 'admin', 'medico', 'chefeDpt'],
+      default: 'paciente',
     },
     activationToken: {
       type: String,
@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema(
       type: Date,
     },
     details: {
-      dob: Date,
+      dateOfBirth: Date,
       crm: Number,
     }
   },
@@ -54,11 +54,6 @@ const userSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
-
-// Virtual Properties
-userSchema.virtual('daysSinceRegistration').get(function () {
-  return Math.floor((Date.now() - this.createdAt) / (1000 * 60 * 60 * 24));
-});
 
 // Model Methods
 userSchema.methods.checkPassword = async function (passwordInput, userPassword) {
