@@ -5,8 +5,8 @@ const bcrypt = require('bcrypt');
 const especialidadeSchema = new mongoose.Schema({
   especialidade: {
     type: String,
-    enum: ['CLÍNICA GERAL', 'PEDIATRIA', 'RADIOLOGIA', 'OFTALMOLOGIA', 'ONCOLOGIA', 'DERMATOLOGIA', 'GASTROENTEROLOGIA', 'EPIDEMIOLOGIA'],
-    default: 'CLÍNICA GERAL',
+    name: String,
+    description: String
   },
 },
 {

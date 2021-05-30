@@ -4,19 +4,12 @@ const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema(
   {
-    email: {
+    username: {
       type: String,
-      required: [true, 'Email is a required field.'],
+      required: [true, 'Username is a required field.'],
       unique: true,
       trim: true,
       lowercase: true,
-      validate: {
-        validator: function (v) {
-          const emailRegex = /\S+@\S+\.\S+/;
-          return emailRegex.test(v.toLowerCase());
-        },
-        message: 'A valid email is required.',
-      },
     },
     password: {
       type: String,
@@ -27,8 +20,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['user', 'moderator', 'admin'],
-      default: 'user',
+      enum: ['usuario', 'atendente', 'admin'],
+      default: 'usuario',
     },
     activationToken: {
       type: String,
@@ -50,6 +43,10 @@ const userSchema = new mongoose.Schema(
     passwordResetExpires: {
       type: Date,
     },
+    details: {
+      dob: Date,
+      crm: Number,
+    }
   },
   {
     timestamps: true,
