@@ -1,15 +1,17 @@
-const crypto = require('crypto');
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt');
 
-const consultaSchema = new mongoose.Schema({
-     
-},
-{
-  timestamps: true,
-  toJSON: { virtuals: true },
-  toObject: { virtuals: true },
-});
+const consultaSchema = new mongoose.Schema(
+  {
+      paciente: String,
+      medico: String,
+      appointmentDate: Date,
+  },
+  {
+    timestamps: true,
+    toJSON: { virtuals: true },
+    toObject: { virtuals: true },
+  }
+);
 
 // Virtual Properties
 
