@@ -2,9 +2,18 @@ const mongoose = require('mongoose');
 
 const consultaSchema = new mongoose.Schema(
   {
-      paciente: String,
-      medico: String,
-      appointmentDate: Date,
+      paciente: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      medico: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      },
+      appointmentDate: {
+        type: Date,
+        required: [true, 'Nao pode existir consulta sem data.']
+      }
   },
   {
     timestamps: true,
@@ -13,7 +22,15 @@ const consultaSchema = new mongoose.Schema(
   }
 );
 
-// Virtual Properties
+// Static Methods
+consultaSchema.statics.getModelName = (type = 'singular') => {
+  return type === 'plural' ? 'consultas' : 'consulta';
+};
+
+consultaSchema.pre(/^find/, function(next) {
+  this.populate('medico').populate('paciente');
+  next();
+})
 
 const Consulta = mongoose.model('Consulta', consultaSchema);
 

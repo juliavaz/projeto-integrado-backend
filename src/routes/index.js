@@ -1,14 +1,15 @@
 const { Router } = require('express');
 const usersRoutes = require('./usersRoutes');
 const authRoutes = require('./authRoutes');
-const authController = require('../controllers/authController');
 const CustomError = require('../utils/customError');
+const consultasRoutes = require('./consultasRoutes');
 
 const router = new Router();
 
 // Custom Routes
 router.use('/users', usersRoutes);
 router.use('/auth', authRoutes);
+router.use('/consultas', consultasRoutes);
 
 // Default Routes
 router.get('/', (req, res, next) => {

@@ -28,7 +28,9 @@ const userSchema = new mongoose.Schema(
     },
     activated: {
       type: Boolean,
-      default: false,
+      // Como usuarios serao criados por administradores ou atendentes, colocar a conta como ativada por padrao.
+      // Caso o usuario pudesse se cadastrar sozinho (pela internet, por ex.), exigir ativacao por email
+      default: true,
     },
     deleted: {
       type: Boolean,

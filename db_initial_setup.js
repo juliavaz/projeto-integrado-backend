@@ -10,6 +10,7 @@ const createFirstUser = async () => {
       username: 'admin',
       password: 'admin',
       role: 'admin',
+      activated: true
     });
 
     if (newUser) {
