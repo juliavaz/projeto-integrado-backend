@@ -20,17 +20,8 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['paciente', 'atendente', 'admin', 'medico', 'chefeDpt'],
+      enum: ['paciente', 'atendente', 'admin', 'medico'],
       default: 'paciente',
-    },
-    activationToken: {
-      type: String,
-    },
-    activated: {
-      type: Boolean,
-      // Como usuarios serao criados por administradores ou atendentes, colocar a conta como ativada por padrao.
-      // Caso o usuario pudesse se cadastrar sozinho (pela internet, por ex.), exigir ativacao por email
-      default: true,
     },
     deleted: {
       type: Boolean,
@@ -39,16 +30,14 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: Date.now,
     },
-    passwordResetToken: {
-      type: String,
-    },
-    passwordResetExpires: {
-      type: Date,
-    },
     details: {
       dateOfBirth: Date,
       crm: Number,
-    }
+      especialidade: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Especialidade',
+      },
+    },
   },
   {
     timestamps: true,
@@ -65,28 +54,6 @@ userSchema.methods.checkPassword = async function (passwordInput, userPassword) 
 userSchema.methods.passwordChangedAfter = function (timestamp) {
   // Returns true if password has been changed after the provided timestamp
   return parseInt(new Date(this.passwordUpdatedAt).getTime() / 1000) > timestamp;
-};
-
-userSchema.methods.createActivationToken = async function () {
-  const token = crypto.randomBytes(32).toString('hex');
-
-  this.activationToken = crypto.createHash('sha256').update(token).digest('hex');
-
-  this.save({ validateBeforeSave: false });
-
-  return token;
-};
-
-userSchema.methods.createPasswordResetToken = async function () {
-  const token = crypto.randomBytes(32).toString('hex');
-
-  this.passwordResetToken = crypto.createHash('sha256').update(token).digest('hex');
-
-  this.passwordResetExpires = Date.now() + 24 * 60 * 60 * 1000;
-
-  this.save({ validateBeforeSave: false });
-
-  return token;
 };
 
 // Middlewares

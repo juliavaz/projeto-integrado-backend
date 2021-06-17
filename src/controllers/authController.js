@@ -1,9 +1,7 @@
 const { promisify } = require('util');
-const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const CustomError = require('../utils/customError');
 const User = require('../models/userModel');
-const EmailHandler = require('../utils/emailHandler');
 
 // TODO: send jwt token via cookie for improved security.
 
@@ -44,72 +42,19 @@ exports.requireRoles = (...roles) => {
 
 exports.signup = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email: email });
+    const { username, password } = req.body;
+    const user = await User.findOne({ username: username });
 
-    if (user) return next(new CustomError('Email already registered.', 'fail', 400));
+    if (user) return next(new CustomError('Username already registered.', 'fail', 400));
 
     const newUser = await User.create({
-      email: email,
+      username: username,
       password: password,
     });
 
-    newUser.token = await newUser.createActivationToken();
-
-    const sentEmail = await new EmailHandler(newUser).sendActivationEmail();
-
     return res.status(201).json({
       status: 'success',
-      message: 'Accounted created. Please activate it now by checking the instructions sent to your email address.',
-    });
-  } catch (err) {
-    return next(err);
-  }
-};
-
-exports.resendActivationToken = async (req, res, next) => {
-  try {
-    const user = await User.findOne({ email: req.body.email });
-
-    if (user && user.activated === false) {
-      user.activationToken = await user.createActivationToken();
-
-      const sentEmail = await new EmailHandler(user).sendActivationEmail();
-
-      return res.status(200).json({
-        status: 'success',
-        message: `Activation instructions resent to your email.`,
-      });
-    }
-
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Email not registered or account already activated.',
-    });
-  } catch (err) {
-    return next(err);
-  }
-};
-
-exports.activate = async (req, res, next) => {
-  try {
-    const encryptedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
-
-    const user = await User.findOne({ activationToken: encryptedToken });
-
-    if (user) {
-      user.activated = true;
-      user.save({ runValidators: false });
-
-      return res.status(200).json({
-        status: 'success',
-        message: 'Accounted activated.',
-      });
-    }
-
-    return res.status(400).json({
-      status: 'fail',
-      message: 'Invalid data.',
+      message: 'Accounted created. You may now log in.',
     });
   } catch (err) {
     return next(err);
@@ -118,19 +63,12 @@ exports.activate = async (req, res, next) => {
 
 exports.login = async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { username, password } = req.body;
     const user = await User.findOne({
-      email: email,
+      username: username,
     }).select('+password');
 
     if (user && (await user.checkPassword(password, user.password))) {
-      if (user.activated !== true) {
-        return res.status(200).json({
-          status: 'fail',
-          message: 'Account has not been activated yet.',
-        });
-      }
-
       const token = await jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIREIN,
       });
@@ -145,51 +83,6 @@ exports.login = async (req, res, next) => {
     }
 
     return next(new CustomError('Invalid credentials.', 'fail', 401));
-  } catch (err) {
-    return next(err);
-  }
-};
-
-exports.forgotPassword = async (req, res, next) => {
-  try {
-    const user = await User.findOne({ email: req.body.email });
-
-    if (user) {
-      user.resetToken = await user.createPasswordResetToken();
-
-      const sentEmail = await new EmailHandler(user).sendPasswordRecoveryEmail();
-    }
-
-    res.status(200).json({
-      status: 'success',
-      message: `If there's an user with the provided email address, a message will be sent with instructions.`,
-    });
-  } catch (err) {
-    return next(err);
-  }
-};
-
-exports.resetPassword = async (req, res, next) => {
-  try {
-    const encryptedToken = crypto.createHash('sha256').update(req.params.token).digest('hex');
-
-    const user = await User.findOne({ passwordResetToken: encryptedToken, passwordResetExpires: { $gt: Date.now() } });
-
-    if (user) {
-      // Password is encrypted in the model
-      user.password = req.body.password;
-      user.passwordResetToken = undefined;
-      user.passwordResetExpires = undefined;
-
-      await user.save();
-
-      return res.status(200).json({
-        status: 'success',
-        message: `Password updated successfully.`,
-      });
-    }
-
-    return next(new CustomError('Invalid data or expired token.', 'fail', 400));
   } catch (err) {
     return next(err);
   }

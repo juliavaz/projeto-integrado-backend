@@ -4,15 +4,11 @@ const bcrypt = require('bcrypt');
 
 const especialidadeSchema = new mongoose.Schema(
   {
-    especialidade: {
-      name: {
-        type: String,
-        required: [true, 'Especialidade precisa de um nome.']
-      },
-      description: {
-        type: String,
-        required: [true, 'Especialidade precisa de uma descrição']
-      },
+    name: {
+      type: String,
+      required: [true, 'Especialidade precisa de um nome.'],
+      unique: [true, 'Especialidade ja cadastrada.'],
+      lowercase: true,
     },
   },
   {
@@ -22,7 +18,10 @@ const especialidadeSchema = new mongoose.Schema(
   }
 );
 
-// Virtual Properties
+// Static Methods
+especialidadeSchema.statics.getModelName = (type = 'singular') => {
+  return type === 'plural' ? 'especialidades' : 'especialidade';
+};
 
 const Especialidade = mongoose.model('Especialidade', especialidadeSchema);
 

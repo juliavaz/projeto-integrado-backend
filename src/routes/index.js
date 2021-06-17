@@ -2,6 +2,7 @@ const { Router } = require('express');
 const usersRoutes = require('./usersRoutes');
 const authRoutes = require('./authRoutes');
 const CustomError = require('../utils/customError');
+const especialidadesRoutes = require('./especialidadesRoutes');
 const consultasRoutes = require('./consultasRoutes');
 
 const router = new Router();
@@ -9,6 +10,7 @@ const router = new Router();
 // Custom Routes
 router.use('/users', usersRoutes);
 router.use('/auth', authRoutes);
+router.use('/especialidades', especialidadesRoutes);
 router.use('/consultas', consultasRoutes);
 
 // Default Routes

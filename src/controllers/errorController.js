@@ -37,9 +37,10 @@ module.exports = (err, req, res, next) => {
   }
 
   if (err.code === 11000) {
+    console.log(err);
     return res.status(400).json({
       status: 'fail',
-      message: `Duplicate. ${JSON.stringify(err.keyValue)}`,
+      message: `Duplicate. ${err.keyValue.name} already exists.`,
     });
   }
 
