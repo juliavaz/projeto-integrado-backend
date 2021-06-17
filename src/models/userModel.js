@@ -68,6 +68,14 @@ userSchema.pre('save', async function (next) {
 
 userSchema.pre(/^find/, function (next) {
   this.find({ deleted: { $ne: true } });
+  this.populate({
+    path: 'details',
+    populate: {
+      path: 'especialidade',
+      model: 'Especialidade',
+      select: 'name',
+    },
+  });
   next();
 });
 
