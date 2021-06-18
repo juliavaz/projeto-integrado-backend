@@ -10,7 +10,7 @@ exports.create = async (req, res, next) => {
             return res.status(400).json({
                 status: 'fail',
                 message: 'Paciente e medico nao podem ser a mesma pessoa.'
-            })
+            });
         }
 
         // Verifica se os usuarios existem no banco de dados. Caso contrario retorna erro
@@ -28,10 +28,25 @@ exports.create = async (req, res, next) => {
         }
 
         // Valida se nao existe consulta do mesmo medico, no mesmo horario com outro paciente
-                
-        
+        const consultaMedico = await Consulta.findOne({
+            medico: req.body.medico,
+            data: req.body.data
+        });
+
+        if (consultaMedico) {
+            return next(new CustomError('O medico ja tem uma consulta no mesmo horario com outro paciente.', 'fail', 400));
+        }
+
         // Valida se nao existe consulta do mesmo paciente, no mesmo horario com outro medico
-    
+        const consultaPaciente = await Consulta.findOne({
+            paciente: req.body.paciente,
+            data: req.body.data
+        })
+
+        if (consultaPaciente) {
+            return next(new CustomError('O paciente ja tem uma consulta no mesmo horario com outro medico.', 'fail', 400));
+        }
+
         // Se der tudo certo, cria a consulta e retorna ok pro usuario
         const consulta = await Consulta.create(req.body);
         return res.status(200).json({
