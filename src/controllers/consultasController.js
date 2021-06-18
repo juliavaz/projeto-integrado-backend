@@ -60,5 +60,16 @@ exports.retrieve = factory.retrieve(Consulta);
 exports.retrieveOne = factory.retrieveOne(Consulta);
 exports.delete = factory.delete(Consulta);
 
-// Escrever metodos adicionais para pegar todas as consultas de um usuario, ou de um medico
-// Definir as autorizacoes para cada metodo
+// Metodo adicional para pegar todas as consultas de um usuario, ou de um medico
+exports.listarConsultasDoUsuario = async (req, res, next) => {
+  try {
+    const consultas = await Consulta.find({ paciente: req.params.userid });
+
+    return res.status(200).json({
+      status: 'success',
+      consultas: consultas,
+    });
+  } catch (err) {
+    return next(err);
+  }
+};

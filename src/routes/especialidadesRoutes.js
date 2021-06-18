@@ -5,6 +5,7 @@ const authController = require('../controllers/authController');
 const router = new Router();
 
 // Consultas routes
+// A gestao de especialidades se da apenas por administradores
 router.use(authController.requireLogin, authController.requireRoles('admin'));
 
 router.post('/', especialidadesController.create);

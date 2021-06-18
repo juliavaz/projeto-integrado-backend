@@ -5,7 +5,8 @@ const authController = require('../controllers/authController');
 const router = new Router();
 
 // Consultas routes
-router.use(authController.requireLogin, authController.requireRoles('admin'));
+// As consultas podem ser criadas tanto por atendentes quanto administradores
+router.use(authController.requireLogin, authController.requireRoles('atendente', 'admin'));
 
 router.post('/', consultasController.create);
 router.get('/', consultasController.retrieve);
