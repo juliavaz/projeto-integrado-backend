@@ -1,0 +1,891 @@
+{
+	"info": {
+		"_postman_id": "d2f6d410-0dc5-46fd-9290-05d8980a1947",
+		"name": "Sistema Hospitalar",
+		"description": "Sistema de gestão hospitalar, com cadastro de usuários, autenticação e autorização (com níveis de acesso), cadastro de especialidades e de consultas.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"leandro\",\r\n    \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth/signup",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						},
+						"description": "Rota para que o usuário se cadastre."
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwtToken\", pm.response.json().data.jwtToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"leandro\",\r\n    \"password\": \"123456\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						},
+						"description": "Rota para efetuar o login."
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwtToken\", pm.response.json().data.jwtToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"password\": \"123456\",\r\n    \"newPassword\": \"123456\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth/change-password",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"change-password"
+							]
+						},
+						"description": "Rota para alteração de senha do usuário logado."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Account",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.environment.set(\"jwtToken\", pm.response.json().data.jwtToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/auth/delete-account",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"delete-account"
+							]
+						},
+						"description": "Rota para exclusão da conta do usuário autenticado. Soft delete, na verdade a conta não é excluída, mas marcada com deleted = true."
+					},
+					"response": []
+				}
+			],
+			"description": "Rotas de autenticação:\n- Cadastro de Usuários\n- Login\n- Alteração de Senha\n- Exclusão da Própria Conta"
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"daniel\",\r\n    \"password\": \"123456\",\r\n    \"role\": \"paciente\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Rota para criação de usuários."
+					},
+					"response": []
+				},
+				{
+					"name": "Adicionar Especialidade ao Usuário",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"especialidade\": \"60cbd98c1e6f584b0004e899\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users/60cbd558fbc1c838d8c9d0b5/especialidade",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"60cbd558fbc1c838d8c9d0b5",
+								"especialidade"
+							]
+						},
+						"description": "Rota que adiciona uma especialidade a um usuário específico."
+					},
+					"response": []
+				},
+				{
+					"name": "Atualiza Especialidade do Usuário",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"especialidade\": \"60cbf12717c80b4ec0f36268\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users/60cbd558fbc1c838d8c9d0b5/especialidade",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"60cbd558fbc1c838d8c9d0b5",
+								"especialidade"
+							]
+						},
+						"description": "Rota que atualiza a especialidade do usuário."
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Especialidade do Usuário",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users/60cbd558fbc1c838d8c9d0b5/especialidade",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"60cbd558fbc1c838d8c9d0b5",
+								"especialidade"
+							]
+						},
+						"description": "Rota que remove a especialidade de um usuário."
+					},
+					"response": []
+				},
+				{
+					"name": "Lista Especialidade do Usuário",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users/60cbd558fbc1c838d8c9d0b5/especialidade",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"60cbd558fbc1c838d8c9d0b5",
+								"especialidade"
+							]
+						},
+						"description": "Rota que lista a especialidade de um usuário."
+					},
+					"response": []
+				},
+				{
+					"name": "Lista Consultas do Usuário",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users/60cc7ad2cab5e850ec62bda9/consultas",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"60cc7ad2cab5e850ec62bda9",
+								"consultas"
+							]
+						},
+						"description": "Rota para listar todas as consultas marcadas de um usuário."
+					},
+					"response": []
+				},
+				{
+					"name": "List Users",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						},
+						"description": "Rota para listar todos os usuários do sistema."
+					},
+					"response": []
+				},
+				{
+					"name": "List Single User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users/60cbd53ffbc1c838d8c9d0b3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"60cbd53ffbc1c838d8c9d0b3"
+							]
+						},
+						"description": "Rota para listar um único usuário do sistema."
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"role\": \"medico\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/users/60cbd558fbc1c838d8c9d0b5",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"60cbd558fbc1c838d8c9d0b5"
+							]
+						},
+						"description": "Rota para atualizar o cadastro de um usuário."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users/60cbd53ffbc1c838d8c9d0b3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"60cbd53ffbc1c838d8c9d0b3"
+							]
+						},
+						"description": "Rota para excluir completa e permanentemente um usuário do sistema."
+					},
+					"response": []
+				}
+			],
+			"description": "Rotas para Gerenciamento de Usuários."
+		},
+		{
+			"name": "Especialidades",
+			"item": [
+				{
+					"name": "Create Especialidade",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Neurologia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/especialidades",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"especialidades"
+							]
+						},
+						"description": "Rota para criação de uma nova especialidade."
+					},
+					"response": []
+				},
+				{
+					"name": "List Especialidades",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/especialidades",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"especialidades"
+							]
+						},
+						"description": "Rota para listar as especialidades cadastradas no sistema."
+					},
+					"response": []
+				},
+				{
+					"name": "List Single Especialidade",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/especialidades/60cbd98c1e6f584b0004e899",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"especialidades",
+								"60cbd98c1e6f584b0004e899"
+							]
+						},
+						"description": "Rota para listar e exibir uma única especialidade."
+					},
+					"response": []
+				},
+				{
+					"name": "Update Especialidade",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Cardiologia\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/especialidades/60cbd98c1e6f584b0004e899",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"especialidades",
+								"60cbd98c1e6f584b0004e899"
+							]
+						},
+						"description": "Rota para atualizar uma especialidade."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Especialidade",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/especialidades/60cbd8066916100230b4d6eb",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"especialidades",
+								"60cbd8066916100230b4d6eb"
+							]
+						},
+						"description": "Rota para excluir uma especialidade."
+					},
+					"response": []
+				}
+			],
+			"description": "Rotas para gestão das especialidades cadastradas no sistema."
+		},
+		{
+			"name": "Consultas",
+			"item": [
+				{
+					"name": "Create Consulta",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"paciente\": \"60cc7ad2cab5e850ec62bda9\",\r\n    \"medico\": \"60cbd558fbc1c838d8c9d0b5\",\r\n    \"data\": \"2021-06-18 18:00\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/consultas",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"consultas"
+							]
+						},
+						"description": "Rota para criar uma nova consulta."
+					},
+					"response": []
+				},
+				{
+					"name": "List Consultas",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/consultas",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"consultas"
+							]
+						},
+						"description": "Rota para listar todas as consultas do sistema."
+					},
+					"response": []
+				},
+				{
+					"name": "List Single Consulta",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/consultas/60cc7b93c1adf856808fd23a",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"consultas",
+								"60cc7b93c1adf856808fd23a"
+							]
+						},
+						"description": "Rota para listar e exibir uma única consulta."
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Consulta",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/consultas/60cc7b93c1adf856808fd23a",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"consultas",
+								"60cc7b93c1adf856808fd23a"
+							]
+						},
+						"description": "Rota para excluir uma consulta."
+					},
+					"response": []
+				}
+			],
+			"description": "Rotas para gestão das consultas."
+		},
+		{
+			"name": "Test Routes",
+			"item": [
+				{
+					"name": "Base",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwtToken}}",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"url": {
+							"raw": "{{URL}}",
+							"host": [
+								"{{URL}}"
+							]
+						},
+						"description": "Rota que verifica se a API está funcionando."
+					},
+					"response": []
+				}
+			],
+			"description": "Rotas de teste."
+		}
+	]
+}
