@@ -18,7 +18,6 @@ exports.create = async (req, res, next) => {
     const medico = await User.findById(req.body.medico);
 
     if (!paciente || !medico) {
-      console.log('chegamos aqui');
       return next(new CustomError('Usuário(s) inválido(s). Médico ou paciente nao existe(m).', 'fail', 400));
     }
 
@@ -60,3 +59,6 @@ exports.create = async (req, res, next) => {
 exports.retrieve = factory.retrieve(Consulta);
 exports.retrieveOne = factory.retrieveOne(Consulta);
 exports.delete = factory.delete(Consulta);
+
+// Escrever metodos adicionais para pegar todas as consultas de um usuario, ou de um medico
+// Definir as autorizacoes para cada metodo
