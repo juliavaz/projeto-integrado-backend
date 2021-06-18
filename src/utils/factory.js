@@ -19,8 +19,8 @@ exports.create = (Model) => async (req, res, next) => {
 
 exports.retrieve = (Model) => async (req, res, next) => {
   try {
-    const queryFeatures = new QueryFeatures(Model.find(), req.query).filter().sort().limitFields().paginate();    
-    
+    const queryFeatures = new QueryFeatures(Model.find(), req.query).filter().sort().limitFields().paginate();
+
     const docs = await queryFeatures.query;
 
     const identifier = `${Model.getModelName('plural')}`;
@@ -43,6 +43,13 @@ exports.retrieveOne = (Model) => async (req, res, next) => {
     const identifier = `${Model.getModelName('singular')}`;
     const data = {};
     data[identifier] = doc;
+
+    if (!doc) {
+      return res.status(404).json({
+        status: 'fail',
+        message: `${identifier} not found.`,
+      });
+    }
 
     return res.status(200).json({
       status: 'success',
