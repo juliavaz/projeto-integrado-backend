@@ -10,7 +10,6 @@ router.use(authController.requireLogin, authController.requireRoles('admin'));
 router.post('/', consultasController.create);
 router.get('/', consultasController.retrieve);
 router.get('/:id', consultasController.retrieveOne);
-router.patch('/:id', consultasController.update);
 router.delete('/:id', consultasController.delete);
 
 module.exports = router;
